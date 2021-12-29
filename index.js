@@ -27,7 +27,7 @@ client.on('interactionCreate', async interaction => {
   }
 
   if(interaction.commandName === 'balance') {
-    await interaction.reply(UserBalances[interaction.user.id])
+    await interaction.reply(UserBalances[interaction.user.id] + " moneys.")
   }
 });
 
