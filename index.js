@@ -1,29 +1,8 @@
-const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord-api-types/v9');
+const { TOKEN } = require('./config.json');
 
-const commands = [{
-  name: 'submit',
-  description: 'Submit your taxes.'
-}]; 
+UserBalances = {}
 
 const TAX_RATE = 10;
-
-const rest = new REST({ version: '9' }).setToken('token');
-
-(async () => {
-  try {
-    console.log('Started refreshing application (/) commands.');
-
-    await rest.put(
-      Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID),
-      { body: commands },
-    );
-
-    console.log('Successfully reloaded application (/) commands.');
-  } catch (error) {
-    console.error(error);
-  }
-})();
 
 const { Client, Intents } = require('discord.js');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
@@ -36,8 +15,20 @@ client.on('interactionCreate', async interaction => {
   if (!interaction.isCommand()) return;
 
   if (interaction.commandName === 'submit') {
-    await interaction.reply('Submitted taxes successfully.');
+    bal = interaction.options.getInteger('int');
+    owed = ((100 * TAX_RATE) / UserBalances[interaction.user.id])
+    UserBalances[interaction.user.id] = UserBalances[interaction.user.id] - owed;
+    await interaction.reply('Submitted taxes successfully. You owe ' + ((100 * TAX_RATE) / UserBalances[interaction.user.id]));
+  }
+
+  if(interaction.commandName === 'create') {
+      UserBalances[interaction.user.id] = 10
+      await interaction.reply('Opened a new TruttleBank account successfully! Your balance is 10.')
+  }
+
+  if(interaction.commandName === 'balance') {
+    await interaction.reply(UserBalances[interaction.user.id])
   }
 });
 
-client.login('token');
+client.login(TOKEN);
