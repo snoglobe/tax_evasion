@@ -16,9 +16,9 @@ client.on('interactionCreate', async interaction => {
 
   if (interaction.commandName === 'submit') {
     bal = interaction.options.getInteger('int');
-    owed = ((100 * TAX_RATE) / UserBalances[interaction.user.id])
+    owed = ((TAX_RATE / 100) * UserBalances[interaction.user.id])
     UserBalances[interaction.user.id] = UserBalances[interaction.user.id] - owed;
-    await interaction.reply('Submitted taxes successfully. You owe ' + ((100 * TAX_RATE) / UserBalances[interaction.user.id]));
+    await interaction.reply('Submitted taxes successfully. You owe ' + owed);
   }
 
   if(interaction.commandName === 'create') {
